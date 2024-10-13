@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: 0;
+  }
+  img {
+    vertical-align: middle;
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+  }
+  ul,
+  ol,
+  li {
+    list-style-type: none;
+  }
+  body{
+    margin: 50px 300px;
+  }
+}
+@layer components{
+  input::placeholder{
+    color: white;
+  }
+}
