@@ -1,29 +1,63 @@
-import React, { useState } from 'react'
-import BlogDetails from './BlogDetails';
+
+// eslint-disable-next-line no-unused-vars
+import React , { useEffect, useState } from 'react'
+import axios from "axios"
+
+
+
 const Curd = () => {
+
     const handleSubmit = (event) => {
         event.preventDefault()
     }
     ///usestate functionality start here===============
     const [InputValue, setInputValue] = useState({
-        Title: "",
-        Description: "",
-        Author: "",
+        title: "",
+        description: "",
+        authorName: "",
     });
+    const [ allauthorDAta  , setallauthorDAta] = useState([]);
+
+    /// ================================= useEffect functionality implementation  =========================
+    useEffect(() => {
+        const allData = async () => {
+            try {
+                const responseData = await axios.get("http://localhost:4000/getAllblog");
+                setallauthorDAta(responseData?.data?.data);
+
+            } catch (error) {
+                console.log(error);
+
+            }
+
+        }
+        allData();
+    }, []);
 
 
     ///HandleInputValue====
-    const HandleInputValue = (e) => {
+    const HandleInputValue = async (event) => {
+        const { id, value } = event.target
         setInputValue({
             ...InputValue,
-            [e.target.id]: e.target.value
+            [id]: value,
         })
-        console.log(e.target.id);
     }
     ///HandleSubmitBlog functionality implementation
-    const HandleSubmitBlog = () => {
-        console.log("hello");
-
+    const HandleSubmitBlog = async () => {
+        const { title, description, authorName } = InputValue;
+        // Make a request for a user with a given ID
+        axios.post('http://localhost:4000/createBlog', {
+            "title": title,
+            "description": description,
+            "authorName": authorName
+        })
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
 
 
@@ -38,30 +72,30 @@ const Curd = () => {
                                 <input type="text"
                                     id='title'
                                     name='title'
-                                    placeholder='Title'
-
+                                    placeholder='title'
                                     autoComplete='off'
+                                    value={InputValue.title}
                                     onChange={HandleInputValue}
-
                                     className='w-full mt-3 bg-red-400 px-[30px] py-6 text-White font-bold text-xl inputField' />
                             </div>
                             <div className='mt-5'>
                                 <input type="text"
                                     id='description'
                                     name='description'
-
                                     placeholder='Description'
                                     autoComplete='off'
+                                    value={InputValue.description}
                                     onChange={HandleInputValue}
                                     className='w-full mt-3 bg-red-400 px-[30px] py-6 text-White font-bold text-xl inputField' />
                             </div>
                             <div className='mt-5'>
 
                                 <input type="text"
-                                    id='Name'
-                                    name='Name'
+                                    id='authorName'
+                                    name='Author'
                                     placeholder='Author Name'
                                     autoComplete='off'
+                                    value={InputValue.authorName}
                                     onChange={HandleInputValue}
                                     className='w-full mt-3 bg-red-400 px-[30px] py-6 text-White font-bold text-xl inputField' />
                             </div>
@@ -73,35 +107,12 @@ const Curd = () => {
                         </form>
                     </div>
                 </div>
-                <div className='bg-red-400 w-[600px] h-[680px] flex justify-start px-[40px] py-[30px] text-start flex-col gap-6 overflow-y-scroll '>
-                    <div className='bg-white px-[20px] py-[10px] h-[90px]  ' >
-                        <div className='flex justify-start items-center align-middle '>
-                            <div className='capitalize text-black text-small font-semi-bold mr-[60px] ' >
-                                <p> title : hello </p>
-                                <p>description : mern stack  </p>
-                                <p>author Name : taufik islam </p>
-                            </div>
-                            <div className=' flex justify-end gap-[10px] '>
-                                <button className='bg-red-400 px-4 py-2 capitalize' >edit</button>
-                                <button className='bg-green-400 px-4 py-2 capitalize '>delete</button>
-                            </div>
-                        </div>
-                    </div>
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                    <BlogDetails />
-                </div>
+                {allauthorDAta?.map((item)=>(
+
+                ))}
+
+               
+
             </div>
         </>
     )
